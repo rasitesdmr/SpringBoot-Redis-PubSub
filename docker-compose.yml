@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  redis:
+    container_name: redisCacheContainer
+    image: redis/redis-stack
+    restart: always
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+
+  app:
+    container_name: SpringBoot-Redis-PubSub
+    build: .
+    ports:
+      - "5555:5555"
+    environment:
+      - spring.cache.type=redis
+      - spring.redis.host=localhost
+      - spring.redis.port=6379
+      - spring.main.allow-bean-definition-overriding=true
+    restart: always
+    depends_on:
+      - redis
